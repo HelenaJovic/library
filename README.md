@@ -12,7 +12,7 @@ Utilized Node.js and Express to create a scalable and efficient backend structur
 Integrated Prisma as an ORM tool to interact seamlessly with a PostgreSQL database, ensuring smooth data handling and manipulation.
 Designed RESTful API endpoints to handle various library operations such as book lookups, member registrations, and transaction processing.
 
-2.**Frontend Development:**
+2. **Frontend Development:**
 
 Developed a responsive and interactive user interface using React, offering a seamless user experience.
 Employed Tailwind CSS to style the application, ensuring an aesthetically pleasing and intuitive layout.
