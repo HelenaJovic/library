@@ -8,15 +8,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String
-  role Role @default(USER)
-
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  lastName  String
+  role      Role      @default(USER)
+  books     UserBook[]
+  imageUrl  String   
 }
 
 enum Role{
   USER 
   ADMIN
 }
+
+model Book{
+  id Int @id @default(autoincrement())
+  name String
+  writer String
+  users     UserBook[]
+  imageUrl  String?
+
+
+}
+
+model UserBook {
+  user     User     @relation(fields: [userId], references: [id])
+  userId   Int      
+  book     Book     @relation(fields: [bookId], references: [id])
+  bookId   Int      
+  date    DateTime 
+
+  @@id([userId, bookId])
+}
+
+
+

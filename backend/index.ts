@@ -1,6 +1,8 @@
 import express, { Express } from "express";
 import cors from "cors";
-import usersAPI from "./API/usersAPI";
+import userController from "./controllers/user-controller";
+import bookController from "./controllers/book-controller";
+import userBookController from "./controllers/user-book-controller"
 
 
 const app: Express = express();
@@ -10,7 +12,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use("/users", usersAPI);
+app.use("/users", userController);
+app.use("/books",bookController);
+app.use("/user_book",userBookController);
 
 
 
