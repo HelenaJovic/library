@@ -2,6 +2,8 @@ import express, { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import userService from "../services/user-service";
 const prisma = new PrismaClient();
+import { z } from "zod";
+import { CreateUserDto, UpdateUserDto } from '../dtos/user-dto';
 const router: Router = express.Router();
 
 router.use(express.json());
@@ -16,10 +18,14 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.post("/", async (req: Request, res: Response) => {
-  const { name, email, role, lastName,imageUrl } = req.body;
+  const validation = CreateUserDto.safeParse(req.body);
 
+  if (!validation.success) {
+      return res.status(400).json({ errors: validation.error.format() });
+  }
   try {
-      const newUser = await userService.createUser(name, email, role, lastName,imageUrl);
+      const createUserDto = validation.data; 
+      const newUser = await userService.createUser(createUserDto);
       res.status(201).json(newUser);
   } catch (error) {
       res.status(500).json({ error: "Failed to create user" });
@@ -27,13 +33,25 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.put("/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { name, email, role,lastName,imageUrl } = req.body;
+  const userId = parseInt(req.params.id);
+  if (isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid ID provided." });
+  }
+
+  const validation = UpdateUserDto.safeParse({
+      id: userId,
+      ...req.body
+  });
+
+  if (!validation.success) {
+      return res.status(400).json({ errors: validation.error.format() });
+  }
 
   try {
-      const updatedUser = await userService.updateUser(parseInt(id), name, email, role,lastName,imageUrl);
+      const updatedUser = await userService.updateUser(validation.data);
       res.json(updatedUser);
   } catch (error) {
+      console.error("Failed to update user:", error);
       res.status(500).json({ error: "Failed to update user" });
   }
 });

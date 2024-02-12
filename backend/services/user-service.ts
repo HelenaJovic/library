@@ -1,45 +1,35 @@
 import { User, PrismaClient, Role } from "@prisma/client";
+import { CreateUserDto, UpdateUserDto,CreateUserDtoType ,UpdateUserDtoType} from '../dtos/user-dto';
 
 const prisma = new PrismaClient();
 
 class UserService {
-    async getAllUsers(): Promise<User[]> {
-        return await prisma.user.findMany();
+     getAllUsers(): Promise<User[]> {
+        return  prisma.user.findMany();
     }
 
-    async createUser(name: string, email: string, role: Role, lastName: string,imageUrl:string): Promise<User> {
+    createUser(createUserDto: CreateUserDtoType): Promise<User> {
         return prisma.user.create({
-            data: {
-                name,
-                email,
-                role,
-                lastName,
-                imageUrl
-            },
+            data: createUserDto,
         });
     }
 
-    async updateUser(id: number, name: string, email: string, role: Role,lastName:string,imageUrl:string): Promise<User | null> {
+    updateUser(updateUserDto: UpdateUserDtoType): Promise<User | null> {
+        const { id, ...data } = updateUserDto;
         return prisma.user.update({
             where: { id },
-            data: {
-                name,
-                email,
-                role,
-                lastName,
-                imageUrl
-            },
+            data,
         });
     }
 
-    async deleteUser(id: number): Promise<User | null> {
+     deleteUser(id: number): Promise<User | null> {
         return prisma.user.delete({
             where: { id },
         });
     }
 
 
-    async getUserById(id: number): Promise<User | null> {
+     getUserById(id: number): Promise<User | null> {
         return prisma.user.findUnique({
             where: { id },
         });
