@@ -10,7 +10,7 @@ router.use(express.json());
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const users = await userService.getAllUsers();
+    const users = await userService.getAll();
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch users" });
@@ -25,7 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
   try {
       const createUserDto = validation.data; 
-      const newUser = await userService.createUser(createUserDto);
+      const newUser = await userService.create(createUserDto);
       res.status(201).json(newUser);
   } catch (error) {
       res.status(500).json({ error: "Failed to create user" });
@@ -48,7 +48,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 
   try {
-      const updatedUser = await userService.updateUser(validation.data);
+      const updatedUser = await userService.update(validation.data);
       res.json(updatedUser);
   } catch (error) {
       console.error("Failed to update user:", error);
@@ -60,7 +60,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-      const deletedUser = await userService.deleteUser(parseInt(id));
+      const deletedUser = await userService.delete(parseInt(id));
       res.json(deletedUser);
   } catch (error) {
       res.status(500).json({ error: "Failed to delete user" });
@@ -71,7 +71,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-      const user = await userService.getUserById(parseInt(id));
+      const user = await userService.getById(parseInt(id));
       if (user) {
           res.json(user);
       } else {

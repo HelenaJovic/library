@@ -16,17 +16,22 @@ class UserBookService {
             return  prisma.userBook.findMany();
         }
 
-        async getBookIdsByUserId(userId: number): Promise<number[]> {
-            const userBooks = await prisma.userBook.findMany({
+          getUserWithBooks(userId: number) {
+            const userWithBooks =  prisma.user.findUnique({
                 where: {
-                    userId: userId
+                    id: userId,
                 },
-                select: {
-                    bookId: true 
-                }
+                include: {
+                    books: {
+                        include: {
+                            book: true, 
+                        },
+                    },
+                },
             });
-            return userBooks.map(ub => ub.bookId); 
+            return userWithBooks;
         }
+        
 
 }
 

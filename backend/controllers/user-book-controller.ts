@@ -30,8 +30,7 @@ router.get("/", async (req: Request, res: Response) => {
   router.get("/booksByUser/:userId", async (req: Request, res: Response) => {
     try {
         const userId = parseInt(req.params.userId);
-        const bookIds = await userBookService.getBookIdsByUserId(userId);
-        const books = await bookService.getBooksByIds(bookIds);
+        const books = await userBookService.getUserWithBooks(userId);
         res.json(books);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch books for the user" });
